@@ -1,6 +1,18 @@
 import {PropertiesOfElement} from "./interface";
 
 /**
+ * Get the index of the element by comparing Model ID
+ * @param initElementArray init Elements array
+ * @param modelId model ID
+ * @param rename Array Primary Key
+ */
+const getIndexByModelId = (initElementArray: Array<any>, modelId: string, keyRename="modelId") => {
+    return initElementArray.findIndex((value => {
+        return value[`${keyRename}`] === modelId;
+    }));
+};
+
+/**
  * Get extra properties of the cell by Model ID
  * @param propertiesOfElementArray
  * @param modelId Cell Model ID
@@ -11,11 +23,11 @@ const getExtraPropertiesFromModelId = (propertiesOfElementArray: Array<Propertie
         return simplified ?
             {
                 department: propertiesOfElementArray[index].department,
-                person: propertiesOfElementArray[index].person
+                person: propertiesOfElementArray[index].person,
             } : propertiesOfElementArray[index];
-    } else {
+    } 
         return {};
-    }
+    
 };
 
 const determineIfIsPropertiesArray = (toBeDetermined: Array<any>): toBeDetermined is Array<PropertiesOfElement> => {
@@ -24,18 +36,6 @@ const determineIfIsPropertiesArray = (toBeDetermined: Array<any>): toBeDetermine
         && (toBeDetermined as Array<PropertiesOfElement>)[0].department
         && (toBeDetermined as Array<PropertiesOfElement>)[0].modelId
     );
-};
-
-/**
- * Get the index of the element by comparing Model ID
- * @param initElementArray init Elements array
- * @param modelId model ID
- * @param rename Array Primary Key
- */
-const getIndexByModelId = (initElementArray: Array<any>, modelId: string, keyRename="modelId") => {
-    return initElementArray.findIndex((value => {
-        return value[`${keyRename}`] === modelId;
-    }));
 };
 
 export {getExtraPropertiesFromModelId, determineIfIsPropertiesArray, getIndexByModelId}

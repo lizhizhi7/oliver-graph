@@ -7,16 +7,16 @@ import * as joint from "jointjs";
 export const getFourRoundPorts = (groupName: string) => {
     return [{
         group: groupName,
-        args: {x: 0, y: "50%"}
+        args: {x: 0, y: "50%"},
     }, {
         group: groupName,
-        args: {x: "50%", y: 0}
+        args: {x: "50%", y: 0},
     }, {
         group: groupName,
-        args: {x: "100%", y: "50%"}
+        args: {x: "100%", y: "50%"},
     }, {
         group: groupName,
-        args: {x: "50%", y: "100%"}
+        args: {x: "50%", y: "100%"},
     }];
 };
 
@@ -29,7 +29,7 @@ export const getStartPoint = (withFourAroundPorts = false, position = {x: 50, y:
     const portItems = withFourAroundPorts ? getFourRoundPorts("4-rounds") : [];
 
     return new joint.shapes.standard.Circle({
-        position: position,
+        position,
         size: {width: 60, height: 60},
         attrs: {
             label: {text: "开始", fill: "#ffffff"},
@@ -40,15 +40,15 @@ export const getStartPoint = (withFourAroundPorts = false, position = {x: 50, y:
                 "4-rounds": {
                     attrs: {
                         circle: {
-                            r: 4, magnet: true, stroke: "#c3c4c6", "stroke-width": 1, fill: "#ffffff"
-                        }
+                            r: 4, magnet: true, stroke: "#c3c4c6", "stroke-width": 1, fill: "#ffffff",
+                        },
                     },
                     position: {
                         name: "absolute",
-                    }
-                }
+                    },
+                },
             },
-            items: portItems
+            items: portItems,
         },
     });
 };
@@ -62,7 +62,7 @@ export const getEndPoint = (withFourAroundPorts = false, position = {x: 50, y: 5
     const portItems = withFourAroundPorts ? getFourRoundPorts("4-rounds") : [];
 
     return new joint.shapes.standard.Circle({
-        position: position,
+        position,
         size: {width: 60, height: 60},
         attrs: {
             label: {text: "完成", fill: "#ffffff"},
@@ -73,15 +73,15 @@ export const getEndPoint = (withFourAroundPorts = false, position = {x: 50, y: 5
                 "4-rounds": {
                     attrs: {
                         circle: {
-                            r: 4, magnet: true, stroke: "#c3c4c6", "stroke-width": 1, fill: "#ffffff"
-                        }
+                            r: 4, magnet: true, stroke: "#c3c4c6", "stroke-width": 1, fill: "#ffffff",
+                        },
                     },
                     position: {
                         name: "absolute",
-                    }
-                }
+                    },
+                },
             },
-            items: portItems
+            items: portItems,
         },
     });
 };
@@ -96,25 +96,25 @@ export const getStepRectangle = (withFourAroundPorts = false, position = {x: 50,
     const portItems = withFourAroundPorts ? getFourRoundPorts("4-rounds") : [];
 
     return new joint.shapes.standard.Rectangle({
-        position: position,
+        position,
         size: {width: 130, height: 40},
         attrs: {
-            label: {text: title ? title : "步骤"},
+            label: {text: title || "步骤"},
         },
         ports: {
             groups: {
                 "4-rounds": {
                     attrs: {
                         circle: {
-                            r: 4, magnet: true, stroke: "#c3c4c6", "stroke-width": 1, fill: "#ffffff"
-                        }
+                            r: 4, magnet: true, stroke: "#c3c4c6", "stroke-width": 1, fill: "#ffffff",
+                        },
                     },
                     position: {
                         name: "absolute",
-                    }
-                }
+                    },
+                },
             },
-            items: portItems
+            items: portItems,
         },
     });
 };

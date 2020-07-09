@@ -1,9 +1,9 @@
 import React from "react";
+import {Layout} from "antd";
+import {RouteComponentProps, withRouter} from "react-router";
 import Graph from "./OGraph";
 import ModulesMenu from "./ModulesMenu";
-import {Layout} from "antd";
 import "./Workflow.css";
-import {RouteComponentProps, withRouter} from "react-router";
 
 const {Content, Sider} = Layout;
 
@@ -14,17 +14,11 @@ interface WorkflowState {
 type TParams = { workFlowID?: string | undefined };
 
 interface exampleInterface {
-    workFlowID: boolean
+    workFlowID?: boolean
 }
 
 
 class Workflow extends React.Component<RouteComponentProps<TParams> & exampleInterface, WorkflowState> {
-
-    componentDidMount(): void {
-
-        let searchParams = new URLSearchParams(this.props.location.search);
-        console.log(searchParams.get("workFlowID"));
-    }
 
     constructor(props: any) {
         super(props);

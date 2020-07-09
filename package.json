@@ -16,12 +16,18 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "echo \"react-scripts test pass\"",
+    "test": "echo \\\"react-scripts tests pass\\\"",
     "eject": "react-scripts eject",
-    "prepublishOnly": "tsc --p tsconfig_npm.json && gulp"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "prepublishOnly": "tsc --p tsconfig_npm.json && gulp",
+    "lint": "npm run tsc && npm run lint:script && npm run lint:style && npm run lint:md",
+    "lint-fix": "npm run lint-fix:script && npm run lint-fix:demo && npm run lint-fix:style",
+    "lint-fix:demo": "eslint-tinker ./components/*/demo/*.md",
+    "lint-fix:script": "npm run lint:script -- --fix",
+    "lint-fix:style": "npm run lint:style -- --fix",
+    "lint:md": "remark . -f -q",
+    "lint:script": "eslint . --ext '.js,.jsx,.ts,.tsx'",
+    "lint:style": "stylelint '{site,components}/**/*.less' --syntax less",
+    "tsc": "tsc --noEmit"
   },
   "browserslist": {
     "production": [
@@ -46,33 +52,51 @@
     "@types/jest": "24.0.18",
     "@types/jquery": "^3.5.0",
     "@types/node": "12.7.5",
-    "@types/react": "^16.9.41",
+    "@types/react": "^16.9.0",
     "@types/react-dom": "16.9.0",
     "@types/react-router": "^5.1.8",
     "@types/react-router-dom": "^5.1.5",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-router-dom": "^5.0.1",
-    "enzyme": "^3.10.0",
-    "enzyme-adapter-react-16": "^1.14.0",
+    "cz-conventional-changelog": "^3.2.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^6.8.0",
-    "eslint-plugin-flowtype": "^3.13.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-babel": "^5.3.1",
+    "eslint-plugin-flowtype": "^4.7.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^23.18.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-markdown": "^1.0.2",
+    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-react-hooks": "^2.5.1",
+    "eslint-plugin-unicorn": "^19.0.1",
+    "eslint-tinker": "^0.5.0",
     "fibers": "^4.0.3",
     "gulp": "^4.0.2",
     "preview": "^0.1.3",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
     "react-scripts": "^3.4.1",
     "react-test-renderer": "^16.13.1",
-    "typescript": "^3.9.6",
-    "typescript-eslint": "0.0.1-alpha.0"
+    "typescript": "^3.9.6"
   },
   "dependencies": {
     "@ant-design/icons": "^4.0.0",
     "antd": "^4.0.0",
+    "dayjs": "^1.8.18",
     "immutability-helper": "^3.1.1",
     "jointjs": "^3.2.0",
     "lodash": "^4.17.19",
     "rc-queue-anim": "^1.8.5",
-    "dayjs": "^1.8.18"
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

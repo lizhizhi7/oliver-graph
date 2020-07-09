@@ -1,10 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import {FontSizeOutlined, ReloadOutlined} from "@ant-design/icons";
+import {Alert, Button, Col, Input, Layout, Row, Checkbox, Form} from "antd";
+import * as joint from "jointjs";
+import QueueAnim from "rc-queue-anim";
+import {FormInstance} from "antd/lib/form";
+import {RouteComponentProps, withRouter} from "react-router";
 import WorkflowDeployForm from "./WorkflowDeployForm";
 import WorkflowSaveForm from "./WorkflowSaveForm";
 
-import {FontSizeOutlined, ReloadOutlined} from "@ant-design/icons";
-import {Alert, Button, Col, Input, Layout, Row, Checkbox, Form} from "antd";
 import {getDemo, getFourRoundPorts} from "./graphHelper";
 import {
     OGraphProps,
@@ -13,32 +17,33 @@ import {
     ExtendedJqueryEvent,
     ObjectCounter,
     PropertiesOfElement,
-    sendAlertType
+    sendAlertType,
 } from "./interface";
 
 import "./OGraph.css";
 import "jointjs/dist/joint.css";
-import * as joint from "jointjs";
 import ToolsMenu from "./ToolsMenu";
-import QueueAnim from "rc-queue-anim";
-import {FormInstance} from "antd/lib/form";
 import {determineIfIsPropertiesArray, getExtraPropertiesFromModelId, getIndexByModelId} from "./propertiesHelper";
-import {RouteComponentProps, withRouter} from "react-router";
 
 const {Content, Sider} = Layout;
 
 
 class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphState> {
     private graph: joint.dia.Graph;
+
     private paper: joint.dia.Paper | null;
+
     private keyObjectCounter: ObjectCounter;
+
     private propertiesOfElementArray: Array<PropertiesOfElement>;
+
     JSONFormRef = React.createRef<FormInstance>();
+
     JSONSimplified = true;
 
     constructor(props: RouteComponentProps & OGraphProps) {
         super(props);
-        //'opt' for reconstruction of the graph
+        // 'opt' for reconstruction of the graph
         this.graph = new joint.dia.Graph({}, {cellNamespace: joint.shapes});
         this.paper = null;
         this.keyObjectCounter = {
@@ -51,20 +56,20 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
             collapsedRight: false,
             JSONText: "",
             clickedElement: null,
-            alertArrays: []
+            alertArrays: [],
         };
     }
 
     sendAlert: sendAlertType = (content, title = "警告", type = "warning") => {
         this.setState({
             alertArrays: [...this.state.alertArrays, <Alert
-                key={"alert" + (new Date()).valueOf()}
+                key={`alert${  (new Date()).valueOf()}`}
                 message={title}
                 description={content}
                 type={type}
                 showIcon
                 closable
-            />]
+            />],
         });
     };
 
@@ -83,7 +88,7 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
         this.setState({
             JSONText: "",
             clickedElement: null,
-            alertArrays: []
+            alertArrays: [],
         });
         this.keyObjectCounter = {
             startPointNumber: 0,
@@ -93,7 +98,7 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
         this.propertiesOfElementArray = [];
     };
 
-    //Manual Connect Element Function
+    // Manual Connect Element Function
     connectElement = (sourceElement: joint.dia.Element | null, targetElement: joint.dia.Element | null) => {
         if (sourceElement && targetElement) {
             const linkElements = this.graph.getConnectedLinks(sourceElement);
@@ -112,18 +117,18 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
                 new joint.shapes.standard.Link({
                     source: {id: sourceElement.id},
                     target: {id: targetElement.id},
-                    z: -1
+                    z: -1,
                 }).addTo(this.graph);
             }
         }
     };
 
-    //Get Json string from graph model.
+    // Get Json string from graph model.
     getGraphJSONString = () => {
         if (!this.JSONSimplified) {
             const resultJSON = {graph: this.graph.toJSON(), extra: this.propertiesOfElementArray};
             this.JSONFormRef.current?.setFieldsValue({
-                "result-json": JSON.stringify(resultJSON)
+                "result-json": JSON.stringify(resultJSON),
             });
             return;
         }
@@ -131,34 +136,34 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
         const graphLinks: Array<joint.dia.Link> = this.graph.getLinks();
         const optimizedJSON: any = {
             nodes: [],
-            links: []
+            links: [],
         };
         try {
             for (let i = 0, len = graphElements.length; i < len; i++) {
-                const type = graphElements[i].attributes.type;
+                const {type} = graphElements[i].attributes;
                 if (type === "standard.Circle" || type === "standard.Rectangle") {
                     optimizedJSON.nodes.push({
                         id: graphElements[i].cid,
                         nodeName: graphElements[i].attributes.attrs.label.text,
-                        extra: getExtraPropertiesFromModelId(this.propertiesOfElementArray, graphElements[i].id.toString(), true)
+                        extra: getExtraPropertiesFromModelId(this.propertiesOfElementArray, graphElements[i].id.toString(), true),
                     });
                 }
             }
 
             for (let i = 0, len = graphLinks.length; i < len; i++) {
-                const type = graphLinks[i].attributes.type;
+                const {type} = graphLinks[i].attributes;
                 if (type === "standard.Link") {
                     const fromIndex = getIndexByModelId(graphElements, graphLinks[i].attributes.source.id, "id");
                     const toIndex = getIndexByModelId(graphElements, graphLinks[i].attributes.target.id, "id");
                     optimizedJSON.links.push({
                         from: graphElements[fromIndex].cid,
                         to: graphElements[toIndex].cid,
-                        condition: !!graphLinks[i].attributes.labels ? graphLinks[i].attributes.labels[0]?.attrs.text.text : ""
+                        condition: graphLinks[i].attributes.labels ? graphLinks[i].attributes.labels[0]?.attrs.text.text : "",
                     });
                 }
             }
             this.JSONFormRef.current?.setFieldsValue({
-                "result-json": JSON.stringify(optimizedJSON)
+                "result-json": JSON.stringify(optimizedJSON),
             });
         } catch (e) {
             this.sendAlert(`转换出错！请联系管理员。${e}`);
@@ -199,7 +204,7 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
     };
 
     componentDidMount() {
-        //Initialize Paper
+        // Initialize Paper
         this.paper = new joint.dia.Paper({
             el: ReactDOM.findDOMNode(this.refs.placeholder),
             width: "800px",
@@ -212,7 +217,7 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
             connectionStrategy: joint.connectionStrategies.pinAbsolute,
             defaultConnectionPoint: {name: "boundary", args: {selector: "border"}},
             defaultLink: new joint.shapes.standard.Link({z: -1}),
-            cellViewNamespace: joint.shapes
+            cellViewNamespace: joint.shapes,
         });
 
 
@@ -223,7 +228,7 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
         this.keyObjectCounter.stepPointNumber = 3;
 
         const linkEnds = [
-            {source: 0, target: 1}, {source: 1, target: 2}, {source: 2, target: 3}, {source: 3, target: 4}
+            {source: 0, target: 1}, {source: 1, target: 2}, {source: 2, target: 3}, {source: 3, target: 4},
         ];
 
         // add all links to the graph
@@ -231,7 +236,7 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
             new joint.shapes.standard.Link({
                 source: {id: elements[ends.source].id},
                 target: {id: elements[ends.target].id},
-                z: -1 // make sure all links are displayed under the elements
+                z: -1, // make sure all links are displayed under the elements
             }).addTo(this.graph);
         });
 
@@ -241,18 +246,18 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
             "link:mouseenter": (linkView: joint.dia.LinkView) => {
                 linkView.addTools(new joint.dia.ToolsView({
                     tools: [
-                        //new joint.linkTools.Vertices({snapRadius: 0}),
+                        // new joint.linkTools.Vertices({snapRadius: 0}),
                         new joint.linkTools.SourceArrowhead(),
                         new joint.linkTools.TargetArrowhead(),
                         new joint.linkTools.Remove({
-                            distance: 20
-                        })
-                    ]
+                            distance: 20,
+                        }),
+                    ],
                 }));
             },
             "link:connect": (linkView: joint.dia.LinkView, evt: JQuery.Event, elementViewConnected: joint.dia.ElementView) => {
                 _this.connectElement(
-                    linkView.model.getSourceElement(), linkView.model.getTargetElement()
+                    linkView.model.getSourceElement(), linkView.model.getTargetElement(),
                 );
             },
             "link:pointerdblclick": (linkView: joint.dia.LinkView, evt: JQuery.Event) => {
@@ -269,11 +274,11 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
                 if (text !== null) {
                     link.removeLabel();
                     link.appendLabel({
-                        attrs: {text: {text: text}},
+                        attrs: {text: {text}},
                         position: {
                             offset: 15,
-                            distance: 0.5
-                        }
+                            distance: 0.5,
+                        },
                     });
                 }
             },
@@ -282,10 +287,10 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
                     _this.state.clickedElement.unhighlight();
                 }
                 elementView.highlight();
-                //const element = elementView.model;
-                //console.log(element.toJSON());
+                // const element = elementView.model;
+                // console.log(element.toJSON());
                 _this.setState({
-                    clickedElement: elementView
+                    clickedElement: elementView,
                 });
             },
             "element:pointerdblclick": function (elementView: joint.dia.ElementView) {
@@ -293,8 +298,8 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
                 const text = prompt("修改标题", element.attr("label").text);
                 if (text !== null) {
                     element.attr({
-                        label: {text: text},
-                        root: {title: text}
+                        label: {text},
+                        root: {title: text},
                     });
                 }
             },
@@ -308,9 +313,9 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
                         new joint.elementTools.Remove({
                             useModelGeometry: true,
                             y: `${(offset.y)}%`,
-                            x: `${(offset.x)}%`
-                        })
-                    ]
+                            x: `${(offset.x)}%`,
+                        }),
+                    ],
                 }));
             },
             "element:mouseleave": function (elementView: joint.dia.ElementView) {
@@ -335,24 +340,24 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
                     _this.state.clickedElement.unhighlight();
                 }
                 _this.setState({
-                    clickedElement: null
+                    clickedElement: null,
                 });
             },
             "blank:pointerdown": function (evt: ExtendedJqueryEvent, x: number, y: number) {
                 const data: PassingEventInfo = evt.data = {
                     x: 0,
                     y: 0,
-                    cell: new joint.shapes.standard.Rectangle()
+                    cell: new joint.shapes.standard.Rectangle(),
                 };
                 let cell;
                 if (evt.shiftKey) {
                     cell = new joint.shapes.standard.Link({
-                        source: {x: x, y: y},
-                        target: {x: x, y: y},
-                        z: -1 // make sure all links are displayed under the elements
+                        source: {x, y},
+                        target: {x, y},
+                        z: -1, // make sure all links are displayed under the elements
                     });
                 } else {
-                    //const type = ["rectangle", "ellipse"][joint.g.random(0, 1)];
+                    // const type = ["rectangle", "ellipse"][joint.g.random(0, 1)];
                     cell = new joint.shapes.standard.Rectangle();
                     cell.position(x, y);
                     data.x = x;
@@ -361,28 +366,28 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
                 data.cell = cell;
             },
             "blank:pointermove": function (evt: ExtendedJqueryEvent, x: number, y: number) {
-                const data = evt.data;
-                const cell = data.cell;
+                const {data} = evt;
+                const {cell} = data;
                 if (cell.isLink() && !(cell instanceof joint.dia.Element)) {
-                    cell.target({x: x, y: y});
+                    cell.target({x, y});
                 } else {
-                    //cell.addTo(_this.graph);
+                    // cell.addTo(_this.graph);
                     const bbox = new joint.g.Rect(data.x, data.y, x - data.x, y - data.y);
                     bbox.normalize();
                     cell.set({
                         position: {x: bbox.x, y: bbox.y},
-                        size: {width: Math.max(bbox.width, 100), height: Math.max(bbox.height, 40)}
+                        size: {width: Math.max(bbox.width, 100), height: Math.max(bbox.height, 40)},
                     });
                 }
             },
             "blank:pointerup": function (evt: ExtendedJqueryEvent) {
-                const cell = evt.data.cell;
+                const {cell} = evt.data;
                 if (cell.isLink()) return;
                 cell.attr({
                     body: {
                         stroke: "#000000",
-                        fill: "#FFFFFF"
-                    }
+                        fill: "#FFFFFF",
+                    },
                 });
             },
             "blank:mousewheel": (evt: JQuery.Event, x: number, y: number, delta: number) => {
@@ -431,7 +436,7 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
                     <Row gutter={[16, 8]}>
                         <Col span={24}>
                             <div className="description">
-                                {/*按住 <span className="keyboard-key">⇧ shift</span> 并在空白区域拖拽创建一个箭头。*/}
+                                {/* 按住 <span className="keyboard-key">⇧ shift</span> 并在空白区域拖拽创建一个箭头。 */}
                                 双击矩形改变标签值，双击线条添加条件，滚动鼠标放大或缩小绘图区。
                             </div>
                         </Col>

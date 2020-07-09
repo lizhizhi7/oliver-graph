@@ -1,3 +1,3 @@
 import Workflow from "./pages/Workflow/Workflow";
 
-export {Workflow}
+export default Workflow;

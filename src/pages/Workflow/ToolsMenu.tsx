@@ -1,8 +1,8 @@
 import React from "react";
-import {PropertiesOfElement, ToolsMenuProps} from "./interface";
-import {getEndPoint, getStartPoint, getStepRectangle} from "./graphHelper";
 import {Button, Col, Collapse, Form, Input, Row, Tooltip, message} from "antd";
 import {FormInstance} from "antd/lib/form";
+import {PropertiesOfElement, ToolsMenuProps} from "./interface";
+import {getEndPoint, getStartPoint, getStepRectangle} from "./graphHelper";
 import {getIndexByModelId} from "./propertiesHelper";
 
 const {Panel} = Collapse;
@@ -10,7 +10,7 @@ const {Panel} = Collapse;
 export default class ToolsMenu extends React.Component<ToolsMenuProps> {
     formRef = React.createRef<FormInstance>();
 
-    componentDidUpdate(prevProps: Readonly<ToolsMenuProps>, prevState: Readonly<{}>, snapshot?: any): void {
+    componentDidUpdate(): void {
         this.reFill();
     }
 
@@ -59,12 +59,12 @@ export default class ToolsMenu extends React.Component<ToolsMenuProps> {
             if (elementIndex >= 0) {
                 this.formRef.current?.setFieldsValue({
                     department: this.props.propertiesOfElementArray[elementIndex].department,
-                    person: this.props.propertiesOfElementArray[elementIndex].person
+                    person: this.props.propertiesOfElementArray[elementIndex].person,
                 });
             } else {
                 this.formRef.current?.setFieldsValue({
                     department: "",
-                    person: ""
+                    person: "",
                 });
             }
         }
@@ -115,8 +115,8 @@ export default class ToolsMenu extends React.Component<ToolsMenuProps> {
                         <Col span={24}>
                             <Collapse bordered={false} defaultActiveKey={["2"]}>
                                 <Panel header="属性概览" key="1">
-                                    位置：{"x: " + Math.fround(this.props.clickedElement?.getBBox().x) + " y: " + Math.fround(this.props.clickedElement?.getBBox().y)}<br/>
-                                    大小：{"宽: " + Math.fround(this.props.clickedElement?.getBBox().width) + " 高: " + Math.fround(this.props.clickedElement?.getBBox().height)}<br/>
+                                    位置：{`x: ${  Math.fround(this.props.clickedElement?.getBBox().x)  } y: ${  Math.fround(this.props.clickedElement?.getBBox().y)}`}<br/>
+                                    大小：{`宽: ${  Math.fround(this.props.clickedElement?.getBBox().width)  } 高: ${  Math.fround(this.props.clickedElement?.getBBox().height)}`}<br/>
                                 </Panel>
                                 <Panel header="属性修改" key="2">
                                     <Form ref={this.formRef}
