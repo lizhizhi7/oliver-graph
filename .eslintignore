@@ -11,3 +11,5 @@ coverage/*
 
 # Scripts
 gulpfile.js
+scripts/*
+config/*
