@@ -1,0 +1,141 @@
+/*Alert Window CSS*/
+.alert-window {
+    position: absolute;
+    right: 0;
+    z-index: 99;
+    width: 350px;
+    text-align: left;
+}
+
+.alert-window div {
+    margin: 10px;
+    /*animation: fadeInUp;*/
+    /*animation-duration: 0.5s;*/
+    /*animation-fill-mode: both;*/
+    /*Using Ant Motion instead*/
+}
+
+/*Right Bar CSS*/
+.internal-side-bar-right {
+    text-align: center;
+}
+
+.internal-side-bar-right .tooltips-title {
+    padding: 15px;
+    font-family: "sans-serif";
+    font-size: 14px;
+}
+
+.internal-side-bar-right .ant-layout-sider-zero-width-trigger {
+    top: 0;
+    left: -36px;
+}
+
+.internal-side-bar-right .start-point {
+    border: none;
+    background: #1abc9c;
+}
+
+.internal-side-bar-right .end-point {
+    border: none;
+    background: #d9363e;
+}
+
+/*Graph Panel CSS*/
+.graph-panel {
+    margin: 8px auto;
+    border-radius: 4px;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+    font-size: 11px;
+    border-left: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.description {
+    font-family: "sans-serif";
+    font-size: 14px;
+    text-align: center;
+}
+
+.description .keyboard-key {
+    padding: 4px;
+    border: 1px solid black;
+    border-radius: 3px;
+    display: inline-block;
+    background-color: white;
+}
+
+/*Quick Action Buttons CSS*/
+.button-group {
+    text-align: center;
+}
+
+.button-group button {
+    margin: 0 10px;
+}
+
+/*Debug Panel CSS*/
+.function-buttons-vertical {
+    display: inline-block;
+    text-align: center;
+    width: 145px;
+}
+
+.function-buttons-vertical .input-element{
+    display: inline-block;
+    width: 80%;
+    margin: 5px;
+}
+
+
+.result-text-box {
+    display: inline-block;
+    width: calc(100% - 161px);
+    margin: 8px;
+    padding: 2px;
+}
+
+/*Some Animation*/
+@keyframes fadeInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInRight {
+    0% {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

@@ -1,0 +1,13 @@
+.layout .ant-layout-header {
+    height: 46px;
+    padding: 0;
+    line-height: 46px;
+    background: #FFFFFF;
+    position: fixed;
+    z-Index: 10;
+    width: 100%
+}
+
+.ant-layout-content {
+    margin-top: 46px;
+}

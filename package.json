@@ -1,0 +1,78 @@
+{
+  "name": "@lizhizhi7/oliver-graph",
+  "version": "0.5.8",
+  "author": "Oliver Li",
+  "main": "dist/index-ts.js",
+  "types": "dist/index-ts.d.ts",
+  "description": "A workflow manage system with React.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lizhizhi7/oliver-graph/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lizhizhi7/oliver-graph"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "echo \"react-scripts test pass\"",
+    "eject": "react-scripts eject",
+    "prepublishOnly": "tsc --p tsconfig_npm.json && gulp"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "peerDependencies": {
+    "react": ">=16.9.0",
+    "react-dom": ">=16.9.0"
+  },
+  "devDependencies": {
+    "@types/backbone": "^1.4.3",
+    "@types/enzyme": "^3.10.3",
+    "@types/enzyme-adapter-react-16": "^1.0.5",
+    "@types/jest": "24.0.18",
+    "@types/jquery": "^3.5.0",
+    "@types/node": "12.7.5",
+    "@types/react": "^16.9.41",
+    "@types/react-dom": "16.9.0",
+    "@types/react-router": "^5.1.8",
+    "@types/react-router-dom": "^5.1.5",
+    "@typescript-eslint/parser": "^2.34.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "react-router-dom": "^5.0.1",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-flowtype": "^3.13.0",
+    "fibers": "^4.0.3",
+    "gulp": "^4.0.2",
+    "preview": "^0.1.3",
+    "react-scripts": "^3.4.1",
+    "react-test-renderer": "^16.13.1",
+    "typescript": "^3.9.6",
+    "typescript-eslint": "0.0.1-alpha.0"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^4.0.0",
+    "antd": "^4.0.0",
+    "immutability-helper": "^3.1.1",
+    "jointjs": "^3.2.0",
+    "lodash": "^4.17.19",
+    "rc-queue-anim": "^1.8.5",
+    "dayjs": "^1.8.18"
+  }
+}
