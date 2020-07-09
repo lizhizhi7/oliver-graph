@@ -7,7 +7,6 @@ export interface OGraphProps {
 
 export interface OGraphState {
     collapsedRight: boolean;
-    JSONText: string;
     clickedElement: joint.dia.ElementView | null;
     alertArrays: Array<JSX.Element>;
 }

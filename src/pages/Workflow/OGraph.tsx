@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import {FontSizeOutlined, ReloadOutlined} from "@ant-design/icons";
 import {Alert, Button, Col, Input, Layout, Row, Checkbox, Form} from "antd";
 import * as joint from "jointjs";
@@ -39,6 +38,8 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
 
     JSONFormRef = React.createRef<FormInstance>();
 
+    PaperRef = React.createRef<HTMLDivElement>();
+
     JSONSimplified = true;
 
     constructor(props: RouteComponentProps & OGraphProps) {
@@ -54,22 +55,23 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
         this.propertiesOfElementArray = [];
         this.state = {
             collapsedRight: false,
-            JSONText: "",
             clickedElement: null,
             alertArrays: [],
         };
     }
 
     sendAlert: sendAlertType = (content, title = "警告", type = "warning") => {
-        this.setState({
-            alertArrays: [...this.state.alertArrays, <Alert
-                key={`alert${  (new Date()).valueOf()}`}
-                message={title}
-                description={content}
-                type={type}
-                showIcon
-                closable
-            />],
+        this.setState((prevState) => {
+            return {
+                alertArrays: [...prevState.alertArrays, <Alert
+                    key={`alert${  (new Date()).valueOf()}`}
+                    message={title}
+                    description={content}
+                    type={type}
+                    showIcon
+                    closable
+                />],
+            }
         });
     };
 
@@ -86,7 +88,6 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
     resetContent = () => {
         this.graph.resetCells([]);
         this.setState({
-            JSONText: "",
             clickedElement: null,
             alertArrays: [],
         });
@@ -108,7 +109,7 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
             if (firstIndex >= 0) {
                 linkElements.splice(0, firstIndex + 1);
             }
-            const isConnected = linkElements.some((value, index) => {
+            const isConnected = linkElements.some((value) => {
                 return value.getTargetElement()?.id === targetElement?.id;
             });
             if (isConnected) {
@@ -177,6 +178,7 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
                 const analysisObj = JSON.parse(values["result-json"]);
                 const graphObj = analysisObj.graph;
                 const extraObj = analysisObj.extra;
+                // eslint-disable-next-line no-prototype-builtins
                 if (graphObj && graphObj.hasOwnProperty("cells")) {
                     if (graphObj.cells.length === 0) {
                         this.sendAlert("JSON为空！");
@@ -206,7 +208,7 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
     componentDidMount() {
         // Initialize Paper
         this.paper = new joint.dia.Paper({
-            el: ReactDOM.findDOMNode(this.refs.placeholder),
+            el: this.PaperRef.current,
             width: "800px",
             height: "500px",
             gridSize: 10,
@@ -255,12 +257,12 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
                     ],
                 }));
             },
-            "link:connect": (linkView: joint.dia.LinkView, evt: JQuery.Event, elementViewConnected: joint.dia.ElementView) => {
+            "link:connect": (linkView: joint.dia.LinkView) => {
                 _this.connectElement(
                     linkView.model.getSourceElement(), linkView.model.getTargetElement(),
                 );
             },
-            "link:pointerdblclick": (linkView: joint.dia.LinkView, evt: JQuery.Event) => {
+            "link:pointerdblclick": (linkView: joint.dia.LinkView) => {
                 const link = linkView.model;
                 let labelText = "";
                 if (link.labels().length !== 0) {
@@ -335,7 +337,7 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
                     }
                 }
             },
-            "blank:pointerclick": (evt: JQuery.Event, x: number, y: number) => {
+            "blank:pointerclick": () => {
                 if (_this.state.clickedElement) {
                     _this.state.clickedElement.unhighlight();
                 }
@@ -344,6 +346,7 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
                 });
             },
             "blank:pointerdown": function (evt: ExtendedJqueryEvent, x: number, y: number) {
+                // eslint-disable-next-line no-multi-assign
                 const data: PassingEventInfo = evt.data = {
                     x: 0,
                     y: 0,
@@ -416,7 +419,7 @@ class Graph extends React.Component<RouteComponentProps & OGraphProps, OGraphSta
                 <Content style={{marginTop: "35px"}}>
                     <Row gutter={[16, 8]}>
                         <Col span={24}>
-                            <div className="graph-panel" ref="placeholder">
+                            <div className="graph-panel" ref={this.PaperRef}>
                                 SVG Not Supported！Please update your browser!
                             </div>
                         </Col>
